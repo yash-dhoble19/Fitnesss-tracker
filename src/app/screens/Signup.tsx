@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useUser } from '../context/UserContext';
 import {
   Eye,
   EyeOff,
@@ -64,6 +65,7 @@ const BODY_TYPES = [
 // ─── Component ───────────────────────────────────────────────────
 export default function Signup() {
   const navigate = useNavigate();
+  const { setUser } = useUser();
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -117,8 +119,20 @@ export default function Signup() {
   const handleSubmit = () => {
     setIsLoading(true);
     setTimeout(() => {
+      setUser({
+        fullName: formData.fullName,
+        email: formData.email,
+        age: parseInt(formData.age) || 0,
+        heightCm: parseFloat(formData.heightCm) || 0,
+        weightKg: parseFloat(formData.weightKg) || 0,
+        biologicalSex: formData.biologicalSex,
+        bodyType: formData.bodyType,
+        activityLevel: formData.activityLevel,
+        goals: formData.goals,
+        healthConditions: formData.healthConditions,
+      });
       setIsLoading(false);
-      navigate('/onboarding');
+      navigate('/dashboard');
     }, 1500);
   };
 

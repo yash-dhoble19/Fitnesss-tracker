@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Eye, EyeOff, Mail, Lock, Dumbbell, ArrowRight } from 'lucide-react';
+import { useUser } from '../context/UserContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setUser } = useUser();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,8 +14,27 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate auth delay
+    // Simulate auth delay — in production this calls Firebase Auth
     setTimeout(() => {
+      const nameFromEmail = email.split('@')[0].replace(/[._]/g, ' ');
+      setUser({
+        fullName: nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1),
+        email,
+        age: 0,
+        heightCm: 0,
+        weightKg: 0,
+        biologicalSex: '',
+        bodyType: '',
+        activityLevel: 'moderate',
+        goals: [],
+        healthConditions: {
+          diabetes: false,
+          hypertension: false,
+          heartCondition: false,
+          asthma: false,
+          other: '',
+        },
+      });
       setIsLoading(false);
       navigate('/dashboard');
     }, 1200);
